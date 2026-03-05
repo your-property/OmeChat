@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="OmeChat – Meet people worldwide with random video chat. Free, safe, 18+ only." />
+  <title>OmeChat — Meet the World</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!-- Styles (load order matters) -->
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/reset.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/landing.css" />
+  <link rel="stylesheet" href="css/chat.css" />
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════
+     NAVBAR
+══════════════════════════════════════════════════════════ -->
+<nav class="navbar">
+  <a href="index.html" class="nav-brand">
+    <span class="brand-ome">Ome</span><span class="brand-chat">Chat</span>
+  </a>
+
+  <div class="nav-center">
+    <a href="#features" class="nav-link">Features</a>
+    <a href="#premium"  class="nav-link">Premium</a>
+  </div>
+
+  <!-- Guest nav -->
+  <div class="nav-right desktop-only" id="nav-guest">
+    <button class="btn btn-ghost btn-sm" id="btn-nav-login">Log in</button>
+    <button class="btn btn-primary btn-sm" id="btn-nav-signup">Sign up free</button>
+  </div>
+
+  <!-- Logged-in nav -->
+  <div class="nav-right desktop-only hidden" id="nav-user">
+    <span class="nav-username" id="nav-username"></span>
+    <span class="badge badge-premium hidden" id="nav-premium-badge">⭐ Premium</span>
+    <button class="btn btn-primary btn-sm" onclick="startChat()">
+      <i class="fas fa-video"></i> Start Chat
+    </button>
+    <button class="btn btn-ghost btn-sm" id="btn-nav-logout">Log out</button>
+  </div>
+
+  <button class="hamburger" onclick="toggleMobileMenu()" aria-label="Menu">
+    <i class="fas fa-bars"></i>
+  </button>
+</nav>
+
+<!-- Mobile menu -->
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#features" onclick="toggleMobileMenu()">Features</a>
+  <a href="#premium"  onclick="toggleMobileMenu()">Premium</a>
+  <button id="btn-m-login">Log in</button>
+  <button id="btn-m-signup" style="color:var(--c-violet-light)">Sign up free</button>
+  <button id="btn-m-logout" class="hidden">Log out</button>
+  <button id="btn-m-premium" style="color:var(--c-gold)">⭐ Go Premium</button>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     HERO
+══════════════════════════════════════════════════════════ -->
+<main>
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-orb orb-1"></div>
+  <div class="hero-orb orb-2"></div>
+  <div class="hero-orb orb-3"></div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <span class="online-dot"></span>
+      <span><span style="color:var(--c-text)">50,000+</span> people online now</span>
+    </div>
+
+    <h1 class="hero-title">
+      Meet People<br/>
+      <span class="line2">Face to Face</span>
+    </h1>
+
+    <p class="hero-description">
+      Instant random video chat with strangers from around the world.
+      Filter by country, stand out with Premium, stay safe with real moderation.
+    </p>
+
+    <div class="hero-cta">
+      <button class="btn btn-primary" onclick="startChat()" style="font-size:1.05rem;padding:14px 32px">
+        <i class="fas fa-video"></i> Start Chatting — It's Free
+      </button>
+      <button class="btn btn-outline" onclick="showPremiumModal()" style="padding:14px 28px">
+        <i class="fas fa-star" style="color:var(--c-gold)"></i> Go Premium
+      </button>
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat-item">
+        <span class="stat-number">180+</span>
+        <span class="stat-label">Countries</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-number">18+</span>
+        <span class="stat-label">Only Platform</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-number">Free</span>
+        <span class="stat-label">Forever</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     FEATURES
+══════════════════════════════════════════════════════════ -->
+<section class="section" id="features">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-label">Why OmeChat</span>
+      <h2 class="section-title">Built for Real Connections</h2>
+      <p class="section-desc">Everything you need for safe, fun random video chat — on any device.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fas fa-globe"></i></div>
+        <h3>Country Filter</h3>
+        <p>Match specifically with users from a country of your choice. Premium exclusive feature.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fas fa-shield-halved"></i></div>
+        <h3>Safe & Moderated</h3>
+        <p>Strict 18+ gate. Report system. Banned users can't re-enter without review.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:var(--c-gold-glow);border-color:rgba(245,183,0,0.2);color:var(--c-gold)"><i class="fas fa-crown"></i></div>
+        <h3>Premium Badge</h3>
+        <p>Stand out with a visible ⭐ PREMIUM badge shown to everyone you meet.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:var(--c-cyan-glow);border-color:rgba(34,211,238,0.2);color:var(--c-cyan)"><i class="fas fa-mobile-screen"></i></div>
+        <h3>Mobile First</h3>
+        <p>Fully responsive layout. Video stacks vertically on phone, side-by-side on desktop.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+        <h3>Instant Matching</h3>
+        <p>WebRTC-powered connections. No download, no plugin — just your browser.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(16,185,129,0.1);border-color:rgba(16,185,129,0.2);color:var(--c-green)"><i class="fas fa-comment"></i></div>
+        <h3>Text Chat</h3>
+        <p>Send messages alongside your video. Keep talking even when you skip to the next person.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     PREMIUM
+══════════════════════════════════════════════════════════ -->
+<section class="section premium-section" id="premium">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-label">Premium</span>
+      <h2 class="section-title">Stand Out Everywhere</h2>
+      <p class="section-desc">One-time payment. Your badge stays as long as your account does.</p>
+    </div>
+
+    <div class="premium-card">
+      <div class="modal-icon modal-icon-gold" style="margin:0 auto 16px">
+        <i class="fas fa-crown"></i>
+      </div>
+      <div class="premium-price"><sup>$</sup>25</div>
+      <ul class="perks-list" style="max-width:320px;margin:0 auto 28px">
+        <li><i class="fas fa-check"></i> ⭐ PREMIUM badge visible to all users</li>
+        <li><i class="fas fa-check"></i> Country filter — match your target region</li>
+        <li><i class="fas fa-check"></i> Priority matching queue</li>
+        <li><i class="fas fa-check"></i> Lifetime badge (no subscription)</li>
+      </ul>
+      <button class="btn btn-gold" onclick="showPremiumModal()" style="font-size:1rem;padding:14px 36px">
+        <i class="fas fa-star"></i> Get Premium Now
+      </button>
+      <p style="margin-top:14px;font-size:0.82rem;color:var(--c-muted)">Activate within 24 hours after payment verified</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     FOOTER
+══════════════════════════════════════════════════════════ -->
+<footer class="footer">
+  <div class="footer-brand">
+    <span class="brand-ome">Ome</span><span class="brand-chat">Chat</span>
+  </div>
+  <p>© 2025 OmeChat · 18+ Only · <a href="admin.html" style="color:var(--c-muted)">Admin</a></p>
+</footer>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     CHAT ROOM (hidden by default)
+══════════════════════════════════════════════════════════ -->
+<div class="chat-room hidden" id="chat-room">
+
+  <!-- Header -->
+  <div class="chat-header">
+    <a href="index.html" class="chat-header-brand">
+      <span class="brand-ome">Ome</span><span class="brand-chat">Chat</span>
+    </a>
+
+    <div class="chat-header-controls">
+      <button class="country-pill" onclick="showCountryModal()">
+        <i class="fas fa-globe" style="color:var(--c-cyan);font-size:0.85rem"></i>
+        <span id="country-pill-label">Any country</span>
+        <i class="fas fa-chevron-down" style="font-size:0.65rem;opacity:0.5"></i>
+      </button>
+    </div>
+
+    <div class="chat-header-actions">
+      <button class="btn-icon-only" onclick="showPremiumModal()" title="Go Premium" style="color:var(--c-gold)">
+        <i class="fas fa-star"></i>
+      </button>
+      <button class="btn-icon-only chat-stop-btn" onclick="stopChat()" title="Leave chat">
+        <i class="fas fa-xmark"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Videos -->
+  <div class="video-area">
+    <div class="video-grid-2col">
+
+      <!-- Local (you) -->
+      <div class="video-panel">
+        <video id="local-video" autoplay muted playsinline></video>
+        <div class="video-controls-bar">
+          <button class="video-control-btn" id="btn-toggle-mic" onclick="toggleMic()" title="Mute">
+            <i class="fas fa-microphone"></i>
+          </button>
+          <button class="video-control-btn" id="btn-toggle-cam" onclick="toggleCam()" title="Camera off">
+            <i class="fas fa-video"></i>
+          </button>
+        </div>
+        <div class="video-label-bar">
+          <div class="video-user-info">
+            <span class="video-user-name" id="local-label">You</span>
+            <span class="badge badge-premium hidden" id="local-premium-badge">⭐ Premium</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Remote (stranger) -->
+      <div class="video-panel">
+        <video id="remote-video" autoplay playsinline></video>
+
+        <!-- Waiting overlay -->
+        <div class="waiting-overlay" id="waiting-overlay">
+          <div class="waiting-ring"></div>
+          <span class="waiting-text">Finding someone...</span>
+          <div class="waiting-country" id="waiting-country-label" style="display:none">
+            <i class="fas fa-globe" style="color:var(--c-cyan);font-size:0.8rem"></i>
+            <span></span>
+          </div>
+        </div>
+
+        <div class="video-label-bar">
+          <div class="video-user-info">
+            <span class="video-user-name" id="remote-label">Stranger</span>
+            <span class="badge badge-premium hidden" id="remote-premium-badge">⭐ Premium</span>
+          </div>
+          <button class="btn-report-chat" onclick="showReportModal()" title="Report this user">
+            <i class="fas fa-flag"></i>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Chat panel -->
+  <div class="chat-panel">
+    <div class="messages-area" id="chat-messages"></div>
+    <div class="chat-input-bar">
+      <input
+        type="text"
+        id="chat-input"
+        class="chat-text-input"
+        placeholder="Say something…"
+        maxlength="200"
+        autocomplete="off"
+      />
+      <button class="btn-send" onclick="submitChatMessage()" title="Send">
+        <i class="fas fa-paper-plane"></i>
+      </button>
+      <button class="btn-next" onclick="nextPartner()">
+        <i class="fas fa-forward"></i>
+        <span class="next-label">Next</span>
+      </button>
+    </div>
+  </div>
+
+</div><!-- /chat-room -->
+
+
+<!-- ══════════════════════════════════════════════════════════
+     MODALS
+══════════════════════════════════════════════════════════ -->
+
+<!-- Age Gate -->
+<div class="modal-overlay" id="age-modal">
+  <div class="modal">
+    <div class="modal-icon modal-icon-violet"><i class="fas fa-user-check"></i></div>
+    <h2>Age Verification</h2>
+    <p>OmeChat is strictly for users <strong style="color:var(--c-text)">18 years and older</strong>.</p>
+    <div class="modal-body">
+      <button class="btn btn-primary btn-block" onclick="confirmAge()">I confirm I am 18 or older</button>
+      <button class="btn btn-outline btn-block" onclick="denyAge()">I am under 18</button>
+    </div>
+  </div>
+</div>
+
+<!-- Underage Block -->
+<div class="modal-overlay hidden" id="underage-modal">
+  <div class="modal">
+    <div class="modal-icon modal-icon-red"><i class="fas fa-ban"></i></div>
+    <h2>Access Denied</h2>
+    <p>You must be <strong style="color:var(--c-text)">18 or older</strong> to use OmeChat.</p>
+    <p style="margin-top:12px;font-size:0.85rem">Please come back when you're old enough.</p>
+  </div>
+</div>
+
+<!-- Login Modal -->
+<div class="modal-overlay hidden" id="login-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('login-modal')"><i class="fas fa-xmark"></i></button>
+    <div class="modal-icon modal-icon-violet"><i class="fas fa-sign-in-alt"></i></div>
+    <h2>Welcome back</h2>
+    <p>Log in to start video chatting</p>
+
+    <form class="modal-body" id="form-login" novalidate>
+      <button type="button" class="btn btn-facebook" onclick="handleFacebookAuth()">
+        <i class="fab fa-facebook-f"></i> Continue with Facebook
+      </button>
+      <div class="divider"><span>or email</span></div>
+      <div class="field">
+        <input type="email"    id="login-email"    class="input" placeholder="Email address" autocomplete="email" />
+      </div>
+      <div class="field">
+        <input type="password" id="login-password" class="input" placeholder="Password" autocomplete="current-password" />
+      </div>
+      <div id="login-error" class="alert alert-error hidden"></div>
+      <button type="submit" class="btn btn-primary btn-block" id="btn-email-login">Log in</button>
+    </form>
+
+    <div class="modal-footer">
+      No account? <a href="#" onclick="switchModal('login-modal','signup-modal')">Create one free</a>
+    </div>
+  </div>
+</div>
+
+<!-- Signup Modal -->
+<div class="modal-overlay hidden" id="signup-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('signup-modal')"><i class="fas fa-xmark"></i></button>
+    <div class="modal-icon modal-icon-violet"><i class="fas fa-user-plus"></i></div>
+    <h2>Create account</h2>
+    <p>Join free in seconds</p>
+
+    <form class="modal-body" id="form-signup" novalidate>
+      <button type="button" class="btn btn-facebook" onclick="handleFacebookAuth()">
+        <i class="fab fa-facebook-f"></i> Sign up with Facebook
+      </button>
+      <div class="divider"><span>or email</span></div>
+      <div class="field">
+        <input type="text"     id="signup-name"     class="input" placeholder="Display name" autocomplete="name" maxlength="30" />
+      </div>
+      <div class="field">
+        <input type="email"    id="signup-email"    class="input" placeholder="Email address" autocomplete="email" />
+      </div>
+      <div class="field">
+        <input type="password" id="signup-password" class="input" placeholder="Password (min 6 chars)" autocomplete="new-password" />
+      </div>
+      <div id="signup-error" class="alert alert-error hidden"></div>
+      <button type="submit" class="btn btn-primary btn-block" id="btn-email-signup">Create account</button>
+    </form>
+
+    <div class="modal-footer">
+      Already have an account? <a href="#" onclick="switchModal('signup-modal','login-modal')">Log in</a>
+    </div>
+  </div>
+</div>
+
+<!-- Ban Modal -->
+<div class="modal-overlay hidden" id="ban-modal">
+  <div class="modal">
+    <div class="modal-icon modal-icon-red"><i class="fas fa-gavel"></i></div>
+    <h2>Account Banned</h2>
+    <p id="ban-reason-text" style="margin-top:8px;"></p>
+    <p style="margin-top:12px;font-size:0.85rem">Your email is blocked from OmeChat. You can appeal by paying the $5 unban fee.</p>
+    <div class="modal-body">
+      <button class="btn btn-danger btn-block" onclick="showUnbanModal()">
+        <i class="fas fa-unlock-alt"></i> Pay $5 to Appeal Ban
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Unban Payment Modal -->
+<div class="modal-overlay hidden" id="unban-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('unban-modal')"><i class="fas fa-xmark"></i></button>
+    <div class="modal-icon modal-icon-gold"><i class="fas fa-unlock-alt"></i></div>
+    <h2>Unban Appeal — $5</h2>
+    <p>Send exactly <strong style="color:var(--c-text)">$5 USD</strong> via any payment method through our Payoneer link below.</p>
+
+    <div class="modal-body">
+      <div class="payment-box">
+        <span class="pay-icon"><i class="fas fa-link"></i></span>
+        <div>
+          <div style="font-size:0.78rem;color:var(--c-muted);margin-bottom:4px">Payoneer Payment Link</div>
+          <!-- Replace with your real Payoneer payment link -->
+          <a href="https://payoneer.com/pay" target="_blank" rel="noopener">Pay $5 to Unban → Payoneer</a>
+        </div>
+      </div>
+      <p style="font-size:0.82rem;color:var(--c-muted)">All major payment methods accepted via Payoneer (cards, bank transfer, PayPal, etc.)</p>
+      <div class="field">
+        <label for="unban-email">Your email address</label>
+        <input type="email" id="unban-email" class="input" placeholder="account@email.com" />
+      </div>
+      <div class="field">
+        <label for="unban-txid">Transaction / Reference ID</label>
+        <input type="text" id="unban-txid" class="input" placeholder="e.g. TXN-123456789" />
+      </div>
+      <div id="unban-alert" class="alert hidden"></div>
+      <button class="btn btn-primary btn-block" onclick="submitUnbanRequest()">Submit Appeal</button>
+      <p style="font-size:0.78rem;color:var(--c-muted);text-align:center">Reviewed within 24 hours after payment is confirmed</p>
+    </div>
+  </div>
+</div>
+
+<!-- Premium Modal -->
+<div class="modal-overlay hidden" id="premium-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('premium-modal')"><i class="fas fa-xmark"></i></button>
+    <div class="modal-icon modal-icon-gold"><i class="fas fa-crown"></i></div>
+    <h2>Go Premium — $25</h2>
+    <p>One-time payment. Lifetime badge.</p>
+
+    <div class="modal-body">
+      <ul class="perks-list">
+        <li><i class="fas fa-check"></i> ⭐ PREMIUM badge visible to all users</li>
+        <li><i class="fas fa-check"></i> Country filter (match your region)</li>
+        <li><i class="fas fa-check"></i> Priority in matching queue</li>
+        <li><i class="fas fa-check"></i> Lifetime status, no renewal</li>
+      </ul>
+
+      <div class="payment-box">
+        <span class="pay-icon"><i class="fas fa-link"></i></span>
+        <div>
+          <div style="font-size:0.78rem;color:var(--c-muted);margin-bottom:4px">Payoneer Payment Link</div>
+          <!-- Replace with your real Payoneer premium link -->
+          <a href="https://payoneer.com/pay/premium" target="_blank" rel="noopener">Pay $25 Premium → Payoneer</a>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="premium-txid">Transaction / Reference ID</label>
+        <input type="text" id="premium-txid" class="input" placeholder="e.g. TXN-123456789" />
+      </div>
+      <div id="premium-alert" class="alert hidden"></div>
+      <button class="btn btn-gold btn-block" onclick="submitPremiumRequest()">
+        <i class="fas fa-star"></i> Activate Premium
+      </button>
+      <p style="font-size:0.78rem;color:var(--c-muted);text-align:center">Premium activated within 24 hours after verification</p>
+    </div>
+  </div>
+</div>
+
+<!-- Country Filter Modal -->
+<div class="modal-overlay hidden" id="country-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('country-modal')"><i class="fas fa-xmark"></i></button>
+    <div class="modal-icon modal-icon-violet"><i class="fas fa-globe"></i></div>
+    <h2>Country Filter</h2>
+    <p>Match with users from a specific country. <span style="color:var(--c-gold)">Premium feature.</span></p>
+
+    <div class="modal-body">
+      <div class="field">
+        <label for="country-select">Select country</label>
+        <select id="country-select" class="input">
+          <option value="any">🌍 Any Country (Default)</option>
+          <optgroup label="Americas">
+            <option value="US">🇺🇸 United States</option>
+            <option value="CA">🇨🇦 Canada</option>
+            <option value="BR">🇧🇷 Brazil</option>
+            <option value="MX">🇲🇽 Mexico</option>
+          </optgroup>
+          <optgroup label="Europe">
+            <option value="GB">🇬🇧 United Kingdom</option>
+            <option value="DE">🇩🇪 Germany</option>
+            <option value="FR">🇫🇷 France</option>
+            <option value="IT">🇮🇹 Italy</option>
+            <option value="ES">🇪🇸 Spain</option>
+            <option value="NL">🇳🇱 Netherlands</option>
+            <option value="SE">🇸🇪 Sweden</option>
+            <option value="NO">🇳🇴 Norway</option>
+            <option value="PL">🇵🇱 Poland</option>
+            <option value="RU">🇷🇺 Russia</option>
+          </optgroup>
+          <optgroup label="Asia & Pacific">
+            <option value="IN">🇮🇳 India</option>
+            <option value="JP">🇯🇵 Japan</option>
+            <option value="KR">🇰🇷 South Korea</option>
+            <option value="PH">🇵🇭 Philippines</option>
+            <option value="ID">🇮🇩 Indonesia</option>
+            <option value="AU">🇦🇺 Australia</option>
+          </optgroup>
+          <optgroup label="Africa & Middle East">
+            <option value="NG">🇳🇬 Nigeria</option>
+            <option value="ZA">🇿🇦 South Africa</option>
+            <option value="TR">🇹🇷 Turkey</option>
+          </optgroup>
+        </select>
+      </div>
+      <button class="btn btn-primary btn-block" onclick="applyCountryFilter()">
+        <i class="fas fa-filter"></i> Apply Filter
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Report Modal -->
+<div class="modal-overlay hidden" id="report-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('report-modal')"><i class="fas fa-xmark"></i></button>
+    <div class="modal-icon modal-icon-red"><i class="fas fa-flag"></i></div>
+    <h2>Report User</h2>
+    <p>Help us keep OmeChat safe. Reports are reviewed by moderators.</p>
+
+    <div class="modal-body">
+      <div class="field">
+        <label for="report-reason">Reason for report</label>
+        <select id="report-reason" class="input">
+          <option value="Inappropriate content">Inappropriate content</option>
+          <option value="Nudity / Sexual content">Nudity / Sexual content</option>
+          <option value="Harassment or bullying">Harassment or bullying</option>
+          <option value="Appears to be underage">Appears to be underage</option>
+          <option value="Spam or bot">Spam or bot</option>
+          <option value="Hate speech">Hate speech</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <button class="btn btn-danger btn-block" onclick="submitReport()">
+        <i class="fas fa-flag"></i> Submit Report
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     TOAST CONTAINER
+══════════════════════════════════════════════════════════ -->
+<div id="toast-container"></div>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     SCRIPTS (load order matters)
+══════════════════════════════════════════════════════════ -->
+<script src="js/db.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/chat-engine.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>

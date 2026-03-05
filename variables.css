@@ -1,0 +1,73 @@
+/* ============================================================
+   OMECHAT — Design Tokens & CSS Variables
+   ============================================================ */
+
+:root {
+  /* Brand Colors */
+  --c-bg:           #08080f;
+  --c-surface:      #0f0f1a;
+  --c-surface2:     #141428;
+  --c-card:         #1a1a30;
+  --c-border:       rgba(255,255,255,0.07);
+  --c-border-hover: rgba(255,255,255,0.14);
+
+  /* Accent Palette */
+  --c-violet:       #7c5cfc;
+  --c-violet-light: #9d82fd;
+  --c-violet-glow:  rgba(124,92,252,0.25);
+  --c-cyan:         #22d3ee;
+  --c-cyan-glow:    rgba(34,211,238,0.2);
+  --c-gold:         #f5b700;
+  --c-gold-glow:    rgba(245,183,0,0.2);
+  --c-red:          #f43f5e;
+  --c-red-glow:     rgba(244,63,94,0.2);
+  --c-green:        #10b981;
+  --c-facebook:     #1877f2;
+
+  /* Text */
+  --c-text:         #e8e8f4;
+  --c-muted:        #6b6b8a;
+  --c-faint:        #3a3a52;
+
+  /* Gradients */
+  --g-brand:        linear-gradient(135deg, var(--c-violet), var(--c-cyan));
+  --g-gold:         linear-gradient(135deg, #f5b700, #ff8c00);
+  --g-surface:      linear-gradient(180deg, var(--c-surface) 0%, var(--c-bg) 100%);
+
+  /* Spacing */
+  --sp-xs: 4px;
+  --sp-sm: 8px;
+  --sp-md: 16px;
+  --sp-lg: 24px;
+  --sp-xl: 40px;
+  --sp-2xl: 64px;
+
+  /* Radius */
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 18px;
+  --r-xl: 24px;
+  --r-full: 9999px;
+
+  /* Typography */
+  --f-display: 'Syne', sans-serif;
+  --f-body:    'DM Sans', sans-serif;
+  --f-mono:    'JetBrains Mono', monospace;
+
+  /* Shadows */
+  --shadow-card:   0 0 0 1px var(--c-border), 0 4px 24px rgba(0,0,0,0.4);
+  --shadow-glow:   0 0 40px var(--c-violet-glow);
+  --shadow-gold:   0 0 30px var(--c-gold-glow);
+
+  /* Transitions */
+  --t-fast:   0.15s ease;
+  --t-normal: 0.25s ease;
+  --t-slow:   0.4s cubic-bezier(0.16,1,0.3,1);
+
+  /* Z-layers */
+  --z-base:    1;
+  --z-nav:    100;
+  --z-chat:   200;
+  --z-modal:  500;
+  --z-toast:  900;
+}

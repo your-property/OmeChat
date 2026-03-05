@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OmeChat — Admin Panel</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/reset.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/admin.css" />
+</head>
+<body class="admin-body">
+
+<!-- ══════════════════════════════════════════════════════════
+     ADMIN LOGIN SCREEN
+══════════════════════════════════════════════════════════ -->
+<div id="admin-login-screen">
+  <div class="admin-login-wrap">
+    <div class="admin-login-card">
+      <div class="modal-icon modal-icon-violet" style="margin:0 auto 20px">
+        <i class="fas fa-shield-halved"></i>
+      </div>
+      <h1><span class="brand-ome">Ome</span><span class="brand-chat">Chat</span></h1>
+      <p>Admin Panel · Restricted Access</p>
+
+      <form id="admin-login-form" novalidate style="display:flex;flex-direction:column;gap:12px">
+        <div class="field">
+          <label for="admin-user">Username</label>
+          <input type="text" id="admin-user" class="input" placeholder="admin" autocomplete="username" />
+        </div>
+        <div class="field">
+          <label for="admin-pass">Password</label>
+          <input type="password" id="admin-pass" class="input" placeholder="••••••••" autocomplete="current-password" />
+        </div>
+        <div id="admin-login-err" class="alert alert-error hidden"></div>
+        <button type="submit" class="btn btn-primary btn-block">
+          <i class="fas fa-arrow-right-to-bracket"></i> Sign in to Admin
+        </button>
+      </form>
+
+      <p style="text-align:center;margin-top:20px;font-size:0.78rem;color:var(--c-faint)">
+        Default: admin / omechat2025! · Change before deploying
+      </p>
+      <p style="text-align:center;margin-top:8px;font-size:0.82rem">
+        <a href="index.html" style="color:var(--c-muted)">← Back to OmeChat</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     ADMIN DASHBOARD
+══════════════════════════════════════════════════════════ -->
+<div id="admin-dashboard" class="hidden">
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <a href="index.html" class="nav-brand" style="font-size:1.3rem">
+      <span class="brand-ome">Ome</span><span class="brand-chat">Chat</span>
+      <span style="font-size:0.75rem;color:var(--c-muted);margin-left:8px;font-family:var(--f-body);font-weight:400">Admin</span>
+    </a>
+    <div style="display:flex;align-items:center;gap:12px">
+      <span style="font-size:0.85rem;color:var(--c-muted)">Logged in as <strong style="color:var(--c-text)">admin</strong></span>
+      <button class="btn btn-ghost btn-sm" onclick="adminLogout()">
+        <i class="fas fa-right-from-bracket"></i> Logout
+      </button>
+    </div>
+  </nav>
+
+  <!-- Layout -->
+  <div class="admin-layout">
+
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <span class="sidebar-label">Navigation</span>
+
+      <button class="sidebar-link active" data-tab="overview" onclick="switchAdminTab('overview')">
+        <i class="fas fa-gauge-high"></i> Overview
+      </button>
+      <button class="sidebar-link" data-tab="users" onclick="switchAdminTab('users')">
+        <i class="fas fa-users"></i> Users
+      </button>
+      <button class="sidebar-link" data-tab="bans" onclick="switchAdminTab('bans')">
+        <i class="fas fa-gavel"></i> Bans
+      </button>
+      <button class="sidebar-link" data-tab="reports" onclick="switchAdminTab('reports')">
+        <i class="fas fa-flag"></i> Reports
+      </button>
+      <button class="sidebar-link" data-tab="actions" onclick="switchAdminTab('actions')">
+        <i class="fas fa-tools"></i> Actions
+      </button>
+      <button class="sidebar-link" data-tab="export" onclick="switchAdminTab('export')">
+        <i class="fas fa-download"></i> Export Data
+      </button>
+    </aside>
+
+    <!-- Main content -->
+    <main class="admin-main">
+
+      <!-- ── OVERVIEW ── -->
+      <div class="admin-panel active" id="panel-overview">
+        <div class="page-header">
+          <h1>Dashboard Overview</h1>
+          <p>Live summary of all platform activity</p>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card stat-violet">
+            <div class="s-num" id="stat-total-users">0</div>
+            <div class="s-label">Total Users</div>
+          </div>
+          <div class="stat-card stat-gold">
+            <div class="s-num" id="stat-premium-users">0</div>
+            <div class="s-label">Premium Users</div>
+          </div>
+          <div class="stat-card stat-red">
+            <div class="s-num" id="stat-banned-users">0</div>
+            <div class="s-label">Banned Users</div>
+          </div>
+          <div class="stat-card stat-cyan">
+            <div class="s-num" id="stat-pending">0</div>
+            <div class="s-label">Pending Reviews</div>
+          </div>
+          <div class="stat-card stat-green">
+            <div class="s-num" id="stat-reports">0</div>
+            <div class="s-label">Open Reports</div>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <h2><i class="fas fa-circle-info"></i> Quick Guide</h2>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:12px;color:var(--c-muted);font-size:0.9rem;line-height:1.7">
+            <p><strong style="color:var(--c-text)">Banning users:</strong> Go to Users tab → click Ban next to any user, or use the Actions tab to ban by email.</p>
+            <p><strong style="color:var(--c-text)">Unbanning:</strong> When a user pays the $5 unban fee and submits their TX ID, verify payment in Payoneer → then unban from the Users tab.</p>
+            <p><strong style="color:var(--c-text)">Activating Premium:</strong> When a user pays the $25 premium fee, verify payment → then activate from the Users tab or Actions tab.</p>
+            <p><strong style="color:var(--c-text)">Reports:</strong> View flagged sessions in Reports tab. Action = resolve with possible ban. Dismiss = false alarm.</p>
+            <p><strong style="color:var(--c-text)">Export:</strong> Use Export Data tab to download login_details.json and ban_list.json files.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── USERS ── -->
+      <div class="admin-panel" id="panel-users">
+        <div class="page-header">
+          <h1>All Users</h1>
+          <p>Manage accounts, premium status, and bans</p>
+        </div>
+
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <h2><i class="fas fa-users"></i> User Accounts</h2>
+            <div style="display:flex;gap:8px">
+              <input type="text" id="user-search" class="input" placeholder="Search by name or email…" oninput="filterUsers()" style="width:220px;border-radius:var(--r-full);padding:8px 14px;font-size:0.85rem" />
+              <button class="btn btn-ghost btn-sm" onclick="renderUsers()"><i class="fas fa-rotate-right"></i> Refresh</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>User</th>
+                  <th>Provider</th>
+                  <th>Status</th>
+                  <th>Premium</th>
+                  <th>Joined</th>
+                  <th>Flags</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="users-tbody">
+                <tr class="empty-row"><td colspan="7">Loading…</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── BANS ── -->
+      <div class="admin-panel" id="panel-bans">
+        <div class="page-header">
+          <h1>Ban Records</h1>
+          <p>Full history of all ban events</p>
+        </div>
+
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <h2><i class="fas fa-gavel"></i> Ban History</h2>
+            <button class="btn btn-ghost btn-sm" onclick="renderBans()"><i class="fas fa-rotate-right"></i> Refresh</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Email</th>
+                  <th>Reason</th>
+                  <th>Banned By</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th>Unban TX ID</th>
+                </tr>
+              </thead>
+              <tbody id="bans-tbody">
+                <tr class="empty-row"><td colspan="6">Loading…</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── REPORTS ── -->
+      <div class="admin-panel" id="panel-reports">
+        <div class="page-header">
+          <h1>User Reports</h1>
+          <p>Review and resolve flagged sessions</p>
+        </div>
+
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <h2><i class="fas fa-flag"></i> Flagged Sessions</h2>
+            <button class="btn btn-ghost btn-sm" onclick="renderReports()"><i class="fas fa-rotate-right"></i> Refresh</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Reporter</th>
+                  <th>Reason</th>
+                  <th>Session ID</th>
+                  <th>Date</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="reports-tbody">
+                <tr class="empty-row"><td colspan="5">Loading…</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── ACTIONS ── -->
+      <div class="admin-panel" id="panel-actions">
+        <div class="page-header">
+          <h1>Manual Actions</h1>
+          <p>Ban, unban, or activate premium by email</p>
+        </div>
+
+        <div class="form-grid">
+          <!-- Ban -->
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <h2><i class="fas fa-gavel"></i> Ban a User</h2>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <div class="field">
+                <label for="ban-email">Email to ban</label>
+                <input type="email" id="ban-email" class="input" placeholder="user@email.com" />
+              </div>
+              <div class="field">
+                <label for="ban-reason-select">Reason</label>
+                <select id="ban-reason-select" class="input">
+                  <option>Inappropriate behavior</option>
+                  <option>Nudity / Sexual content</option>
+                  <option>Harassment or bullying</option>
+                  <option>Underage user</option>
+                  <option>Spam or bot</option>
+                  <option>Terms of Service violation</option>
+                  <option>Hate speech</option>
+                </select>
+              </div>
+              <button class="btn btn-danger btn-block" onclick="doBanUser()">
+                <i class="fas fa-ban"></i> Ban User
+              </button>
+            </div>
+          </div>
+
+          <!-- Unban -->
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <h2><i class="fas fa-unlock"></i> Unban a User</h2>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <div class="field">
+                <label for="unban-email-admin">Email to unban</label>
+                <input type="email" id="unban-email-admin" class="input" placeholder="user@email.com" />
+              </div>
+              <p style="font-size:0.82rem;color:var(--c-muted)">Only unban after verifying payment in your Payoneer account.</p>
+              <button class="btn btn-block" style="background:var(--c-green);color:white;" onclick="doUnbanUser()">
+                <i class="fas fa-unlock-alt"></i> Unban User
+              </button>
+            </div>
+          </div>
+
+          <!-- Activate Premium -->
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <h2><i class="fas fa-crown"></i> Activate Premium</h2>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <div class="field">
+                <label for="premium-email-admin">Email to upgrade</label>
+                <input type="email" id="premium-email-admin" class="input" placeholder="user@email.com" />
+              </div>
+              <p style="font-size:0.82rem;color:var(--c-muted)">Only activate after verifying the $25 payment in Payoneer.</p>
+              <button class="btn btn-gold btn-block" onclick="doActivatePremium()">
+                <i class="fas fa-star"></i> Activate Premium
+              </button>
+            </div>
+          </div>
+
+          <!-- Payoneer info -->
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <h2><i class="fas fa-money-bill-transfer"></i> Payment Links</h2>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:16px;font-size:0.88rem">
+              <div>
+                <div style="font-weight:600;margin-bottom:4px;color:var(--c-gold)">Premium — $25</div>
+                <!-- Replace with your real Payoneer link -->
+                <a href="https://payoneer.com/pay/premium" target="_blank" style="color:var(--c-muted);word-break:break-all">payoneer.com/pay/premium</a>
+              </div>
+              <div>
+                <div style="font-weight:600;margin-bottom:4px;color:var(--c-red)">Unban — $5</div>
+                <!-- Replace with your real Payoneer link -->
+                <a href="https://payoneer.com/pay" target="_blank" style="color:var(--c-muted);word-break:break-all">payoneer.com/pay</a>
+              </div>
+              <p style="color:var(--c-muted);font-size:0.8rem">Update these links in index.html and admin.html with your real Payoneer payment URLs.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── EXPORT ── -->
+      <div class="admin-panel" id="panel-export">
+        <div class="page-header">
+          <h1>Export Data</h1>
+          <p>Download platform data as JSON files</p>
+        </div>
+
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <h2><i class="fas fa-file-export"></i> Download Files</h2>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px">
+
+            <div style="background:var(--c-surface2);border:1px solid var(--c-border);border-radius:var(--r-lg);padding:20px;display:flex;flex-direction:column;gap:12px">
+              <div style="display:flex;align-items:center;gap:10px">
+                <i class="fas fa-users" style="color:var(--c-violet-light);font-size:1.3rem"></i>
+                <div>
+                  <div style="font-weight:600">login_details.json</div>
+                  <div style="font-size:0.78rem;color:var(--c-muted)">All registered user accounts</div>
+                </div>
+              </div>
+              <button class="btn btn-outline btn-block" onclick="exportData('users')">
+                <i class="fas fa-download"></i> Download
+              </button>
+            </div>
+
+            <div style="background:var(--c-surface2);border:1px solid var(--c-border);border-radius:var(--r-lg);padding:20px;display:flex;flex-direction:column;gap:12px">
+              <div style="display:flex;align-items:center;gap:10px">
+                <i class="fas fa-gavel" style="color:var(--c-red);font-size:1.3rem"></i>
+                <div>
+                  <div style="font-weight:600">ban_list.json</div>
+                  <div style="font-size:0.78rem;color:var(--c-muted)">All ban records with reasons</div>
+                </div>
+              </div>
+              <button class="btn btn-outline btn-block" onclick="exportData('bans')">
+                <i class="fas fa-download"></i> Download
+              </button>
+            </div>
+
+            <div style="background:var(--c-surface2);border:1px solid var(--c-border);border-radius:var(--r-lg);padding:20px;display:flex;flex-direction:column;gap:12px">
+              <div style="display:flex;align-items:center;gap:10px">
+                <i class="fas fa-database" style="color:var(--c-gold);font-size:1.3rem"></i>
+                <div>
+                  <div style="font-weight:600">omechat_full_export.json</div>
+                  <div style="font-size:0.78rem;color:var(--c-muted)">Users + bans + reports combined</div>
+                </div>
+              </div>
+              <button class="btn btn-gold btn-block" onclick="exportData('all')">
+                <i class="fas fa-download"></i> Download All
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div><!-- /admin-layout -->
+
+</div><!-- /admin-dashboard -->
+
+
+<!-- Toast -->
+<div id="admin-toast-area" id="toast-container" style="position:fixed;bottom:24px;right:24px;z-index:900;display:flex;flex-direction:column;gap:8px;pointer-events:none"></div>
+
+<!-- Scripts -->
+<script src="js/db.js"></script>
+<script src="js/admin.js"></script>
+
+</body>
+</html>
