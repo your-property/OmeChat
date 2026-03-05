@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OmeChat Admin Panel</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    body { padding-top: 70px; }
+    .admin-wrap { max-width: 1100px; margin: 0 auto; padding: 30px 20px; }
+    .admin-title { font-family:'Rajdhani',sans-serif; font-size:2.2rem; font-weight:700; margin-bottom:8px; }
+    .admin-subtitle { color: var(--muted); margin-bottom:32px; }
+    .admin-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+    .admin-card { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:24px; }
+    .admin-card h3 { font-family:'Rajdhani',sans-serif; font-size:1.3rem; font-weight:600; margin-bottom:16px; display:flex; align-items:center; gap:10px; }
+    .admin-card h3 i { color:var(--primary); }
+    .table-wrap { overflow-x:auto; }
+    table { width:100%; border-collapse:collapse; font-size:0.85rem; }
+    th { text-align:left; padding:8px 12px; color:var(--muted); border-bottom:1px solid var(--border); font-weight:600; }
+    td { padding:8px 12px; border-bottom:1px solid rgba(255,255,255,0.05); }
+    .badge-active { background:rgba(34,197,94,0.2); color:#86efac; padding:2px 8px; border-radius:20px; font-size:0.75rem; }
+    .badge-banned { background:rgba(239,68,68,0.2); color:#fca5a5; padding:2px 8px; border-radius:20px; font-size:0.75rem; }
+    .badge-premium { background:rgba(245,158,11,0.2); color:#fcd34d; padding:2px 8px; border-radius:20px; font-size:0.75rem; }
+    .badge-pending { background:rgba(168,85,247,0.2); color:#d8b4fe; padding:2px 8px; border-radius:20px; font-size:0.75rem; }
+    .admin-actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:4px; }
+    .btn-admin { border:none; padding:5px 12px; border-radius:6px; cursor:pointer; font-size:0.8rem; font-weight:600; transition:opacity 0.2s; }
+    .btn-ban { background:#ef4444; color:white; }
+    .btn-unban { background:#22c55e; color:white; }
+    .btn-premium { background:#f59e0b; color:white; }
+    .btn-admin:hover { opacity:0.85; }
+    .stat-row { display:flex; gap:16px; margin-bottom:20px; flex-wrap:wrap; }
+    .stat-card { background:var(--dark3); border:1px solid var(--border); border-radius:12px; padding:16px 20px; flex:1; min-width:120px; }
+    .stat-card .n { font-family:'Rajdhani',sans-serif; font-size:2rem; font-weight:700; color:var(--primary); }
+    .stat-card .l { font-size:0.8rem; color:var(--muted); margin-top:2px; }
+    .ban-form { display:flex; flex-direction:column; gap:10px; }
+    .admin-login { min-height:100vh; display:flex; align-items:center; justify-content:center; }
+    @media(max-width:768px){ .admin-grid{grid-template-columns:1fr;} }
+  </style>
+</head>
+<body>
+<nav class="navbar">
+  <div class="nav-brand"><span class="brand-ome">Ome</span><span class="brand-chat">Chat</span> <span style="font-size:0.8rem;color:var(--muted);margin-left:8px;">Admin</span></div>
+  <div style="display:flex;gap:12px;align-items:center;">
+    <span id="adminNameDisplay" style="color:var(--muted);font-size:0.9rem;"></span>
+    <button onclick="adminLogout()" class="btn-logout">Logout</button>
+  </div>
+</nav>
+
+<!-- ADMIN LOGIN -->
+<div id="adminLoginScreen" class="admin-login">
+  <div class="modal" style="max-width:380px;">
+    <div class="modal-icon"><i class="fas fa-shield-alt"></i></div>
+    <h2>Admin Login</h2>
+    <div class="auth-options" style="margin-top:16px;">
+      <input type="text" id="adminUser" placeholder="Admin username" class="input-field" />
+      <input type="password" id="adminPass" placeholder="Admin password" class="input-field" />
+      <div id="adminLoginErr" class="error-msg hidden"></div>
+      <button class="btn-primary" onclick="adminLogin()">Login</button>
+    </div>
+    <p style="text-align:center;margin-top:14px;font-size:0.8rem;opacity:0.5;">Default: admin / omechat2025</p>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="adminPanel" class="hidden">
+<div class="admin-wrap">
+  <h1 class="admin-title"><i class="fas fa-tachometer-alt" style="color:var(--primary);margin-right:10px;"></i>Admin Dashboard</h1>
+  <p class="admin-subtitle">Manage users, bans, payments, and reports.</p>
+
+  <div class="stat-row" id="statsRow"></div>
+
+  <div class="admin-grid">
+    <!-- BAN USER -->
+    <div class="admin-card">
+      <h3><i class="fas fa-gavel"></i> Ban a User</h3>
+      <div class="ban-form">
+        <input type="email" id="banEmail" placeholder="User email" class="input-field" />
+        <select id="banReason" class="input-field">
+          <option value="Inappropriate behavior">Inappropriate behavior</option>
+          <option value="Nudity / Sexual content">Nudity / Sexual content</option>
+          <option value="Harassment">Harassment</option>
+          <option value="Underage user">Underage user</option>
+          <option value="Spam / Bot">Spam / Bot</option>
+          <option value="Terms of Service violation">Terms of Service violation</option>
+        </select>
+        <button class="btn-primary" style="background:#ef4444;" onclick="doBanUser()"><i class="fas fa-ban"></i> Ban User</button>
+      </div>
+    </div>
+
+    <!-- UNBAN USER -->
+    <div class="admin-card">
+      <h3><i class="fas fa-unlock"></i> Unban a User</h3>
+      <div class="ban-form">
+        <input type="email" id="unbanEmail" placeholder="User email to unban" class="input-field" />
+        <button class="btn-primary" style="background:#22c55e;" onclick="doUnbanUser()"><i class="fas fa-unlock-alt"></i> Unban User</button>
+        <div id="unbanResult" class="hidden"></div>
+      </div>
+    </div>
+
+    <!-- ACTIVATE PREMIUM -->
+    <div class="admin-card">
+      <h3><i class="fas fa-crown"></i> Activate Premium</h3>
+      <div class="ban-form">
+        <input type="email" id="premiumEmail" placeholder="User email" class="input-field" />
+        <button class="btn-primary" onclick="doActivatePremium()"><i class="fas fa-star"></i> Activate Premium</button>
+        <div id="premiumResult" class="hidden"></div>
+      </div>
+    </div>
+
+    <!-- EXPORT DATA -->
+    <div class="admin-card">
+      <h3><i class="fas fa-download"></i> Export Data</h3>
+      <div class="ban-form">
+        <button class="btn-primary" onclick="exportData('users')"><i class="fas fa-users"></i> Export Login Details (JSON)</button>
+        <button class="btn-primary" style="background:#ef4444;" onclick="exportData('bans')"><i class="fas fa-gavel"></i> Export Ban List (JSON)</button>
+        <button class="btn-primary" style="background:#8b5cf6;" onclick="exportData('all')"><i class="fas fa-database"></i> Export All Data</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- USERS TABLE -->
+  <div class="admin-card" style="margin-top:24px;">
+    <h3><i class="fas fa-users"></i> All Users <button onclick="loadTables()" class="btn-admin" style="background:var(--primary);color:white;margin-left:auto;">Refresh</button></h3>
+    <div class="table-wrap">
+      <table id="usersTable">
+        <thead><tr><th>Name</th><th>Email</th><th>Provider</th><th>Status</th><th>Premium</th><th>Joined</th><th>Actions</th></tr></thead>
+        <tbody id="usersBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- BANS TABLE -->
+  <div class="admin-card" style="margin-top:24px;">
+    <h3><i class="fas fa-ban"></i> Ban Records</h3>
+    <div class="table-wrap">
+      <table id="bansTable">
+        <thead><tr><th>Email</th><th>Reason</th><th>Banned By</th><th>Date</th><th>Status</th><th>Unban TX</th></tr></thead>
+        <tbody id="bansBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- REPORTS TABLE -->
+  <div class="admin-card" style="margin-top:24px;">
+    <h3><i class="fas fa-flag"></i> Reports</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Reporter</th><th>Reason</th><th>Session</th><th>Date</th><th>Status</th></tr></thead>
+        <tbody id="reportsBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<script src="storage.js"></script>
+<script>
+const ADMIN_CREDS = { username: 'admin', password: 'omechat2025' };
+
+function adminLogin() {
+  const u = document.getElementById('adminUser').value;
+  const p = document.getElementById('adminPass').value;
+  const err = document.getElementById('adminLoginErr');
+  if (u === ADMIN_CREDS.username && p === ADMIN_CREDS.password) {
+    document.getElementById('adminLoginScreen').classList.add('hidden');
+    document.getElementById('adminPanel').classList.remove('hidden');
+    document.getElementById('adminNameDisplay').textContent = 'Logged in as admin';
+    loadTables();
+  } else {
+    err.textContent = 'Invalid credentials.';
+    err.classList.remove('hidden');
+  }
+}
+function adminLogout() {
+  document.getElementById('adminPanel').classList.add('hidden');
+  document.getElementById('adminLoginScreen').classList.remove('hidden');
+}
+
+function loadTables() {
+  loadStats();
+  loadUsers();
+  loadBans();
+  loadReports();
+}
+
+function loadStats() {
+  const users = Object.values(DB.getUsers());
+  const bans = DB.getBans();
+  const reports = DB.getReports();
+  const premiums = users.filter(u => u.premium).length;
+  const banned = users.filter(u => u.banned).length;
+  const pending = users.filter(u => u.unbanPending || u.premiumPending).length;
+  document.getElementById('statsRow').innerHTML = `
+    <div class="stat-card"><div class="n">${users.length}</div><div class="l">Total Users</div></div>
+    <div class="stat-card"><div class="n" style="color:#f59e0b">${premiums}</div><div class="l">Premium</div></div>
+    <div class="stat-card"><div class="n" style="color:#ef4444">${banned}</div><div class="l">Banned</div></div>
+    <div class="stat-card"><div class="n" style="color:#a855f7">${pending}</div><div class="l">Pending Review</div></div>
+    <div class="stat-card"><div class="n" style="color:#6c63ff">${reports.length}</div><div class="l">Reports</div></div>
+  `;
+}
+
+function loadUsers() {
+  const users = Object.values(DB.getUsers());
+  const tbody = document.getElementById('usersBody');
+  tbody.innerHTML = users.map(u => `
+    <tr>
+      <td>${u.name}</td>
+      <td>${u.email}</td>
+      <td><span class="badge-active">${u.provider}</span></td>
+      <td>${u.banned ? '<span class="badge-banned">Banned</span>' : '<span class="badge-active">Active</span>'}</td>
+      <td>${u.premium ? '<span class="badge-premium">Premium</span>' : (u.premiumPending ? '<span class="badge-pending">Pending $25</span>' : '-')}</td>
+      <td>${new Date(u.createdAt).toLocaleDateString()}</td>
+      <td>
+        <div class="admin-actions">
+          ${!u.banned ? `<button class="btn-admin btn-ban" onclick="quickBan('${u.email}')">Ban</button>` : `<button class="btn-admin btn-unban" onclick="quickUnban('${u.email}')">Unban</button>`}
+          ${!u.premium ? `<button class="btn-admin btn-premium" onclick="quickPremium('${u.email}')">Premium</button>` : ''}
+        </div>
+      </td>
+    </tr>
+  `).join('') || '<tr><td colspan="7" style="color:var(--muted);text-align:center;padding:20px;">No users yet</td></tr>';
+}
+
+function loadBans() {
+  const bans = DB.getBans();
+  const tbody = document.getElementById('bansBody');
+  const users = DB.getUsers();
+  tbody.innerHTML = bans.map(b => `
+    <tr>
+      <td>${b.email}</td>
+      <td>${b.reason}</td>
+      <td>${b.bannedBy}</td>
+      <td>${new Date(b.bannedAt).toLocaleDateString()}</td>
+      <td>${b.status === 'active' ? '<span class="badge-banned">Active</span>' : '<span class="badge-active">Lifted</span>'}</td>
+      <td>${users[b.email] && users[b.email].unbanTxId ? '<span class="badge-pending">TX: ' + users[b.email].unbanTxId + '</span>' : '-'}</td>
+    </tr>
+  `).join('') || '<tr><td colspan="6" style="color:var(--muted);text-align:center;padding:20px;">No bans</td></tr>';
+}
+
+function loadReports() {
+  const reports = DB.getReports();
+  const tbody = document.getElementById('reportsBody');
+  tbody.innerHTML = reports.map(r => `
+    <tr>
+      <td>${r.reporter}</td>
+      <td>${r.reason}</td>
+      <td style="font-size:0.75rem;opacity:0.6;">${r.sessionId}</td>
+      <td>${new Date(r.reportedAt).toLocaleDateString()}</td>
+      <td><span class="badge-pending">${r.status}</span></td>
+    </tr>
+  `).join('') || '<tr><td colspan="5" style="color:var(--muted);text-align:center;padding:20px;">No reports</td></tr>';
+}
+
+function doBanUser() {
+  const email = document.getElementById('banEmail').value.trim();
+  const reason = document.getElementById('banReason').value;
+  if (!email) { alert('Enter email'); return; }
+  DB.addBan(email, reason, 'admin');
+  alert('Banned: ' + email);
+  loadTables();
+}
+function doUnbanUser() {
+  const email = document.getElementById('unbanEmail').value.trim();
+  if (!email) { alert('Enter email'); return; }
+  DB.removeBan(email);
+  const r = document.getElementById('unbanResult');
+  r.textContent = 'Unbanned: ' + email;
+  r.className = 'success-msg';
+  r.classList.remove('hidden');
+  loadTables();
+}
+function doActivatePremium() {
+  const email = document.getElementById('premiumEmail').value.trim();
+  if (!email) { alert('Enter email'); return; }
+  DB.updateUser(email, { premium: true, premiumPending: false });
+  const r = document.getElementById('premiumResult');
+  r.textContent = 'Premium activated for: ' + email;
+  r.className = 'success-msg';
+  r.classList.remove('hidden');
+  loadTables();
+}
+function quickBan(email) {
+  const reason = prompt('Ban reason for ' + email + ':') || 'Terms of Service violation';
+  DB.addBan(email, reason, 'admin');
+  loadTables();
+}
+function quickUnban(email) {
+  if (confirm('Unban ' + email + '?')) { DB.removeBan(email); loadTables(); }
+}
+function quickPremium(email) {
+  if (confirm('Activate premium for ' + email + '?')) { DB.updateUser(email, {premium:true,premiumPending:false}); loadTables(); }
+}
+function exportData(type) {
+  let data, filename;
+  if (type === 'users') { data = DB.exportLoginDetails(); filename = 'login_details.json'; }
+  else if (type === 'bans') { data = DB.exportBanList(); filename = 'ban_list.json'; }
+  else { data = JSON.stringify({users:DB.getUsers(),bans:DB.getBans(),reports:DB.getReports()},null,2); filename = 'omechat_all_data.json'; }
+  const blob = new Blob([data], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+}
+document.addEventListener('keydown', e => { if (e.key === 'Enter' && document.getElementById('adminLoginScreen').style.display !== 'none') adminLogin(); });
+</script>
+</body>
+</html>
